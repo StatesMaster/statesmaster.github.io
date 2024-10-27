@@ -40,24 +40,17 @@
 
         input {
             padding: 12px 15px;
-            /* Ajustement du rembourrage */
             font-size: 16px;
             margin: 20px;
             border: 2px solid #000000;
-            /* Couleur de la bordure */
             border-radius: 25px;
-            /* Bords arrondis */
             outline: none;
-            /* Supprime le contour par défaut */
             transition: border-color 0.3s ease;
-            /* Transition pour la couleur de la bordure */
         }
 
         input:focus {
             border-color: #b4b4b4;
-            /* Couleur de la bordure lors du focus */
             box-shadow: 0 0 5px rgba(74, 74, 74, 0.5);
-            /* Ombre pour l'effet de focus */
         }
 
         .button {
@@ -73,12 +66,10 @@
             border: none;
             border-radius: 4px;
             transition: transform 0.3s ease;
-            /* Transition smooth pour le bouton */
         }
 
         .button:hover {
             transform: scale(1.1);
-            /* Agrandit le bouton quand on passe la souris dessus */
         }
 
         .feedback {
@@ -92,42 +83,57 @@
             display: none;
         }
 
-        .score {
+        .confetti {
+            position: absolute;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            opacity: 0.8;
+            pointer-events: none;
+            border-radius: 3px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Nouveau style pour le score */
+        #score {
             position: absolute;
             top: 20px;
             right: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+            font-size: 20px;
+            color: #000000;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Bouton Home avec image de maison -->
     <div>
         <a href="index.html">
             <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" class="home-btn">
         </a>
     </div>
 
-    <!-- Score affiché en haut à droite -->
-    <div class="score" id="score">0/50</div>
-
-    <!-- Contenu du jeu -->
     <div class="game-container">
         <h1>Trouve la capitale de l'état</h1>
         <p id="state-name"></p>
 
-        <!-- Champ de saisie pour la réponse -->
         <input type="text" id="capital-input" placeholder="Capitale">
-        <button class="button" onclick="checkAnswer()">Vérifier</button>
+        <button class="button" id="check-btn" onclick="checkAnswer()">Vérifier</button>
 
-        <!-- Message de feedback -->
         <p class="feedback" id="feedback"></p>
 
-        <!-- Bouton Prochaine question caché au début -->
+        <p id="score" class="feedback">Score : 0/0</p> <!-- Compteur ajouté -->
+
         <button id="next-question-btn" class="button hidden" onclick="nextQuestion()">Prochaine question</button>
     </div>
 
@@ -172,7 +178,7 @@
             { name: "de l'Ohio", capital: "Columbus" },
             { name: "de l'Oklahoma", capital: "Oklahoma City" },
             { name: "de l'Oregon", capital: "Salem" },
-            { name: "de laPennsylvanie", capital: "Harrisburg" },
+            { name: "de la Pennsylvanie", capital: "Harrisburg" },
             { name: "de Rhode Island", capital: "Providence" },
             { name: "du Tennessee", capital: "Nashville" },
             { name: "du Texas", capital: "Austin" },
@@ -185,16 +191,14 @@
             { name: "du Wyoming", capital: "Cheyenne" }
         ];
 
-
         let currentStateIndex = 0;
         let score = 0;
-        const totalQuestions = states.length;
+        let totalQuestions = states.length;
 
-        // Fonction pour mélanger le tableau d'États
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Échanger les éléments
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
@@ -202,11 +206,9 @@
             document.getElementById('state-name').textContent = "Quelle est la capitale " + states[currentStateIndex].name + " ?";
             document.getElementById('feedback').textContent = "";
             document.getElementById('capital-input').value = "";
-            document.getElementById('next-question-btn').classList.add('hidden'); // Cacher le bouton de prochaine question
-        }
-
-        function updateScore() {
-            document.getElementById('score').textContent = String(score).padStart(2, '0') + "/" + totalQuestions;
+            document.getElementById('next-question-btn').classList.add('hidden');
+            document.getElementById('check-btn').style.display = 'inline-block'; // Affiche le bouton Vérifier
+            document.getElementById('score').textContent = `${score}/${currentStateIndex}`; // Met à jour le score
         }
 
         function checkAnswer() {
@@ -216,26 +218,54 @@
             if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
                 document.getElementById('feedback').textContent = "Correct !";
                 document.getElementById('feedback').style.color = "green";
-                score++; // Incrémenter le score si la réponse est correcte
-                updateScore(); // Mettre à jour le score
+                score++;
+                showConfetti();
             } else {
-                document.getElementById('feedback').textContent = "Incorrect. La bonne réponse est " + correctAnswer;
+                document.getElementById('feedback').textContent = "Incorrect, la bonne réponse est " + correctAnswer + ".";
                 document.getElementById('feedback').style.color = "red";
             }
 
-            // Afficher le bouton Prochaine question après avoir vérifié la réponse
+            // Met à jour l'état de la question et le score
             document.getElementById('next-question-btn').classList.remove('hidden');
+            document.getElementById('check-btn').style.display = 'none'; // Cache le bouton Vérifier
+
+            currentStateIndex++; // Incrémente l'index de l'état
+            if (currentStateIndex === totalQuestions) {
+                document.getElementById('capital-input').style.display = 'none'; // Cache l'input
+                document.getElementById('next-question-btn').style.display = 'none'; // Cache le bouton Prochaine question
+                document.getElementById('feedback').textContent = "Fin du jeu ! Votre score final est " + score + "/" + totalQuestions;
+            }
+
+            document.getElementById('score').textContent = `${score}/${currentStateIndex}`; // Met à jour le score
         }
 
+        document.getElementById('capital-input').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
         function nextQuestion() {
-            currentStateIndex = (currentStateIndex + 1) % states.length;
             displayState();
         }
 
-        // Initialiser le jeu
-        shuffleArray(states); // Mélanger les États au début
+        function showConfetti() {
+            const confettiCount = 100;
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+
+        shuffleArray(states);
         displayState();
-        updateScore(); // Afficher le score initial
     </script>
 
 </body>
