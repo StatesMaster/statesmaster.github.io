@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatesMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        .button {
+            background-color: #000000;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: transform 0.3s ease; /* Transition smooth pour le bouton */
+        }
+        .button:hover {
+            transform: scale(1.1); /* Agrandit le bouton quand on passe la souris dessus */
+        }
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease; /* Ajout de la transition pour Home */
+        }
+        .home-btn:hover {
+            transform: scale(1.2); /* Agrandit l'icône Home */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Bouton Home avec image de maison -->
+        <a href="index.html">
+            <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" class="home-btn">
+        </a>
+        <h1>Bienvenue dans State Master !</h1>
+        <!-- Bouton Commencer le jeu avec effet hover -->
+        <button class="button" onclick="startGame()">Commencer le jeu</button>
+    </div>
+
+    <script>
+        function startGame() {
+            window.location.href = 'game.html'; // Redirige vers une page appelée game.html
+        }
+    </script>
+
+</body>
+</html>

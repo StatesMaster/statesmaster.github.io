@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatesMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .game-container {
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #000000;
+        }
+
+        input {
+            padding: 12px 15px;
+            /* Ajustement du rembourrage */
+            font-size: 16px;
+            margin: 20px;
+            border: 2px solid #000000;
+            /* Couleur de la bordure */
+            border-radius: 25px;
+            /* Bords arrondis */
+            outline: none;
+            /* Supprime le contour par défaut */
+            transition: border-color 0.3s ease;
+            /* Transition pour la couleur de la bordure */
+        }
+
+        input:focus {
+            border-color: #b4b4b4;
+            /* Couleur de la bordure lors du focus */
+            box-shadow: 0 0 5px rgba(74, 74, 74, 0.5);
+            /* Ombre pour l'effet de focus */
+        }
+
+        .button {
+            background-color: #000000;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            /* Transition smooth pour le bouton */
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+            /* Agrandit le bouton quand on passe la souris dessus */
+        }
+
+        .feedback {
+            margin: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Bouton Home avec image de maison -->
+    <div>
+        <a href="index.html">
+            <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" class="home-btn">
+        </a>
+    </div>
+
+    <!-- Score affiché en haut à droite -->
+    <div class="score" id="score">0/50</div>
+
+    <!-- Contenu du jeu -->
+    <div class="game-container">
+        <h1>Trouve la capitale de l'état</h1>
+        <p id="state-name"></p>
+
+        <!-- Champ de saisie pour la réponse -->
+        <input type="text" id="capital-input" placeholder="Capitale">
+        <button class="button" onclick="checkAnswer()">Vérifier</button>
+
+        <!-- Message de feedback -->
+        <p class="feedback" id="feedback"></p>
+
+        <!-- Bouton Prochaine question caché au début -->
+        <button id="next-question-btn" class="button hidden" onclick="nextQuestion()">Prochaine question</button>
+    </div>
+
+    <script>
+        const states = [
+            { name: "de l'Alabama", capital: "Montgomery" },
+            { name: "de l'Alaska", capital: "Juneau" },
+            { name: "de l'Arizona", capital: "Phoenix" },
+            { name: "de l'Arkansas", capital: "Little Rock" },
+            { name: "de la Californie", capital: "Sacramento" },
+            { name: "de la Caroline du Nord", capital: "Raleigh" },
+            { name: "de la Caroline du Sud", capital: "Columbia" },
+            { name: "du Colorado", capital: "Denver" },
+            { name: "du Connecticut", capital: "Hartford" },
+            { name: "du Dakota du Nord", capital: "Bismarck" },
+            { name: "du Dakota du Sud", capital: "Pierre" },
+            { name: "du Delaware", capital: "Dover" },
+            { name: "de la Floride", capital: "Tallahassee" },
+            { name: "de la Géorgie", capital: "Atlanta" },
+            { name: "d'Hawaï", capital: "Honolulu" },
+            { name: "de l'Idaho", capital: "Boise" },
+            { name: "de l'Illinois", capital: "Springfield" },
+            { name: "de l'Indiana", capital: "Indianapolis" },
+            { name: "de l'Iowa", capital: "Des Moines" },
+            { name: "du Kansas", capital: "Topeka" },
+            { name: "du Kentucky", capital: "Frankfort" },
+            { name: "de la Louisiane", capital: "Baton Rouge" },
+            { name: "du Maine", capital: "Augusta" },
+            { name: "de Maryland", capital: "Annapolis" },
+            { name: "du Massachusetts", capital: "Boston" },
+            { name: "du Michigan", capital: "Lansing" },
+            { name: "du Minnesota", capital: "Saint Paul" },
+            { name: "du Mississippi", capital: "Jackson" },
+            { name: "du Missouri", capital: "Jefferson City" },
+            { name: "du Montana", capital: "Helena" },
+            { name: "du Nebraska", capital: "Lincoln" },
+            { name: "du Nevada", capital: "Carson City" },
+            { name: "du New Hampshire", capital: "Concord" },
+            { name: "du New Jersey", capital: "Trenton" },
+            { name: "du Nouveau-Mexique", capital: "Santa Fe" },
+            { name: "de New York", capital: "Albany" },
+            { name: "de l'Ohio", capital: "Columbus" },
+            { name: "de l'Oklahoma", capital: "Oklahoma City" },
+            { name: "de l'Oregon", capital: "Salem" },
+            { name: "de laPennsylvanie", capital: "Harrisburg" },
+            { name: "de Rhode Island", capital: "Providence" },
+            { name: "du Tennessee", capital: "Nashville" },
+            { name: "du Texas", capital: "Austin" },
+            { name: "de l'Utah", capital: "Salt Lake City" },
+            { name: "du Vermont", capital: "Montpelier" },
+            { name: "de Virginie", capital: "Richmond" },
+            { name: "de Washington", capital: "Olympia" },
+            { name: "de Virginie-Occidentale", capital: "Charleston" },
+            { name: "du Wisconsin", capital: "Madison" },
+            { name: "du Wyoming", capital: "Cheyenne" }
+        ];
+
+
+        let currentStateIndex = 0;
+        let score = 0;
+        const totalQuestions = states.length;
+
+        // Fonction pour mélanger le tableau d'États
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Échanger les éléments
+            }
+        }
+
+        function displayState() {
+            document.getElementById('state-name').textContent = "Quelle est la capitale " + states[currentStateIndex].name + " ?";
+            document.getElementById('feedback').textContent = "";
+            document.getElementById('capital-input').value = "";
+            document.getElementById('next-question-btn').classList.add('hidden'); // Cacher le bouton de prochaine question
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = String(score).padStart(2, '0') + "/" + totalQuestions;
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('capital-input').value.trim();
+            const correctAnswer = states[currentStateIndex].capital;
+
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                document.getElementById('feedback').textContent = "Correct !";
+                document.getElementById('feedback').style.color = "green";
+                score++; // Incrémenter le score si la réponse est correcte
+                updateScore(); // Mettre à jour le score
+            } else {
+                document.getElementById('feedback').textContent = "Incorrect. La bonne réponse est " + correctAnswer;
+                document.getElementById('feedback').style.color = "red";
+            }
+
+            // Afficher le bouton Prochaine question après avoir vérifié la réponse
+            document.getElementById('next-question-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentStateIndex = (currentStateIndex + 1) % states.length;
+            displayState();
+        }
+
+        // Initialiser le jeu
+        shuffleArray(states); // Mélanger les États au début
+        displayState();
+        updateScore(); // Afficher le score initial
+    </script>
+
+</body>
+
+</html>
