@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,12 @@
             padding: 0;
             background-color: #f0f0f0;
         }
+
+        h1 {
+            margin-top: 70px;
+
+        }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -20,6 +27,7 @@
             height: 100vh;
             position: relative;
         }
+
         .button {
             background-color: #000000;
             color: white;
@@ -32,41 +40,98 @@
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            transition: transform 0.3s ease; /* Transition smooth pour le bouton */
+            transition: transform 0.3s ease;
+            /* Transition smooth pour le bouton */
         }
+
         .button:hover {
-            transform: scale(1.1); /* Agrandit le bouton quand on passe la souris dessus */
+            transform: scale(1.1);
+            /* Agrandit le bouton quand on passe la souris dessus */
         }
+
         .home-btn {
             position: absolute;
             top: 20px;
             left: 20px;
             width: 50px;
             height: 50px;
-            transition: transform 0.3s ease; /* Ajout de la transition pour Home */
+            transition: transform 0.3s ease;
+            /* Ajout de la transition pour Home */
         }
+
         .home-btn:hover {
-            transform: scale(1.2); /* Agrandit l'icône Home */
+            transform: scale(1.2);
+            /* Agrandit l'icône Home */
+        }
+
+        .language-selector {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            /* Espace entre les drapeaux */
+        }
+
+        .language-flag {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            /* Rendre les drapeaux ronds */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            /* Transition pour l'effet hover */
+        }
+
+        .language-flag:hover {
+            transform: scale(1.1);
+            /* Agrandit le drapeau quand on passe la souris dessus */
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
-        <!-- Bouton Home avec image de maison -->
         <a href="index.html">
             <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" class="home-btn">
         </a>
-        <h1>Bienvenue dans State Master !</h1>
-        <!-- Bouton Commencer le jeu avec effet hover -->
-        <button class="button" onclick="startGame()">Commencer le jeu</button>
+        <h1>Trouve la capitale de l'état</h1>
+        <a href="gamestates1.html"><button class="button" onclick="startGame()">Commencer le jeu</button></a>
+        <h1>Trouve l'état grâce à la capitale</h1>
+        <a href="gamestates2.html"><button class="button" onclick="startGame()">Commencer le jeu</button></a>
+    </div>
+
+    <div class="language-selector">
+        <img src="drap-fr.png" alt="Français" class="language-flag" onclick="changeLanguage('fr')">
+        <img src="drap-eng.png" alt="English" class="language-flag" onclick="changeLanguage('en')">
     </div>
 
     <script>
-        function startGame() {
-            window.location.href = 'game.html'; // Redirige vers une page appelée game.html
+        function changeLanguage(lang) {
+            const headings = document.querySelectorAll('h1');
+            const buttons = document.querySelectorAll('.button');
+
+            if (lang === 'fr') {
+                // Traduire les titres
+                headings[0].textContent = 'Trouve la capitale de l\'état';
+                headings[1].textContent = 'Trouve l\'état grâce à la capitale';
+                // Traduire les boutons
+                buttons[0].textContent = 'Commencer le jeu';
+                buttons[1].textContent = 'Commencer le jeu';
+            } else if (lang === 'en') {
+                // Traduire les titres
+                headings[0].textContent = 'Find the capital of the state';
+                headings[1].textContent = 'Find the state by the capital';
+                // Traduire les boutons
+                buttons[0].textContent = 'Start Game';
+                buttons[1].textContent = 'Start Game';
+            }
         }
     </script>
 
+    </script>
+
 </body>
+
 </html>
