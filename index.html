@@ -87,19 +87,33 @@
             transform: scale(1.1);
             /* Agrandit le drapeau quand on passe la souris dessus */
         }
+        p {
+            margin-top: 100px;
+
+        }
+        h1 {
+            margin-bottom: 200px;
+            font-size: 80px;
+
+        }
     </style>
 </head>
 
 <body>
-
+    
     <div class="container">
+        <h1>States Master</h1>
         <a href="index.html">
             <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" class="home-btn">
         </a>
-        <h1>Trouve la capitale de l'état</h1>
+        
+
+
+        <h2>Trouve la capitale grâce à l'état</h1>
         <a href="gamestates1.html"><button class="button" onclick="startGame()">Commencer le jeu</button></a>
-        <h1>Trouve l'état grâce à la capitale</h1>
+        <h2>Trouve l'état grâce à la capitale</h1>
         <a href="gamestates2.html"><button class="button" onclick="startGame()">Commencer le jeu</button></a>
+        <p>Made by @theevilspectrum</p>
     </div>
 
     <div class="language-selector">
@@ -109,7 +123,7 @@
 
     <script>
         function changeLanguage(lang) {
-            const headings = document.querySelectorAll('h1');
+            const headings = document.querySelectorAll('h2');
             const buttons = document.querySelectorAll('.button');
 
             if (lang === 'fr') {
